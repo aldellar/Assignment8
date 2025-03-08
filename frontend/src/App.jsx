@@ -8,17 +8,14 @@
 #
 #######################################################################
 */
-
+import Login from './login.jsx';
 /**
  * Simple component with no state.
- *
  * @returns {object} JSX
  */
 function App() {
   return (
-    <pre>
-      CSE186 Assignment 8 - The Mini Project ( Your UI Goes Here )
-    </pre>
+    <Login />
   );
 }
 
