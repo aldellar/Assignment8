@@ -9,13 +9,33 @@
 #######################################################################
 */
 import Login from './login.jsx';
+import Home from './Home';
+import AuthenticatedRoute from './AuthenticatedRoute';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+
 /**
  * Simple component with no state.
  * @returns {object} JSX
  */
 function App() {
   return (
-    <Login />
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/login"
+          exact
+          element={<Login />}
+        />
+        <Route
+          path="/"
+          element={
+            <AuthenticatedRoute>
+              <Home />
+            </AuthenticatedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

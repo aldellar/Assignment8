@@ -1,67 +1,169 @@
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import MuiCard from '@mui/material/Card';
+import {styled} from '@mui/material/styles';
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
+
+const Card = styled(MuiCard)(({theme}) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  width: '100%',
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: 'auto',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
+  boxShadow:
+    `hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
+    hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px`,
+  ...theme.applyStyles('dark', {
+    boxShadow:
+      `hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px,
+      hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px`,
+  }),
+}));
+
+const SignInContainer = styled(Stack)(({theme}) => ({
+  'height': `calc((1 - var(--template-frame-height, 0)) * 100dvh)`,
+  'minHeight': '100%',
+  'padding': theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(4),
+  },
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage:
+      `radial-gradient(ellipse at 50% 50%,
+      hsl(210, 100%, 97%), hsl(0, 0%, 100%))`,
+    backgroundRepeat: 'no-repeat',
+    ...theme.applyStyles('dark', {
+      backgroundImage:
+        `radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5),
+         hsl(220, 30%, 5%))`,
+    }),
+  },
+}));
 /**
- * @returns {*} JSX Component
+ * SignIn component renders a sign-in form with email and password input fields
+ * validation, and options for social sign-in.
+ * @returns {Element} The rendered SignIn component.
+ * @example
+ * return <SignIn />;
+ * @function handleSubmit - Handles form submission and logs input values.
+ * @function validateInputs - Validates email and password fields, setting erro
  */
-function Login() {
+export default function Login() {
   const [credentials, setCredentials] =
     React.useState({email: '', password: ''});
-  const [user, setUser] = React.useState(undefined);
+  const history = useNavigate();
 
   const handleInputChange = (event) => {
     const {value, name} = event.target;
-    setCredentials({...credentials, [name]: value});
+    setCredentials((prev) => ({...prev, [name]: value}));
   };
 
-  const logout = () => {
-    setUser(undefined);
-  };
-
-  const login = (event) => {
+  // Local replacement for a call to an API /login endpoint
+  // Auth Token is a random integer, not a JWT
+  const login = async (event) => {
     event.preventDefault();
-    setUser(undefined);
-    fetch('http://localhost:3010/api/v0/login', {
+    const response = await fetch('http://localhost:3010/api/v0/login', {
       method: 'POST',
-      body: JSON.stringify(credentials),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-    })
-        .then((res) => {
-          if (!res.ok) {
-            throw res;
-          }
-          return res.json();
-        })
-        .then((json) => {
-          setUser(json);
-        })
-        .catch((err) => {
-          alert('Error logging in, please try again');
-        });
+      body: JSON.stringify(credentials)
+    });
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('user', JSON.stringify(data));
+      history('/');
+    } else {
+      alert('Error loggin in, please try again');
+    }
   };
-
   return (
-    <div>
-      <h2>CSE186 Tested Login</h2>
-      <input
-        name="email"
-        type="email"
-        placeholder="EMail"
-        onChange={handleInputChange}
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        onChange={handleInputChange}
-      />
-      <button onClick={login}>Login</button>
-      <p/>
-      <button disabled={!user} onClick={logout}>Logout</button>
-      <p/>
-      <label>{user ? user.name : 'Logged out'}</label>
-    </div>
+    <SignInContainer direction="column" justifyContent="space-between">
+      <Card variant="outlined">
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)'}}
+        >
+          Sign in
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={login}
+          noValidate
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            gap: 2,
+          }}
+        >
+          <FormControl>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <TextField
+              aria-label="email"
+              type="email"
+              name="email"
+              placeholder="EMail"
+              autoComplete="email"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              color='primary'
+              value={credentials.email}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <TextField
+              aria-label='password'
+              name="password"
+              placeholder="Password"
+              type="password"
+              autoComplete="current-password"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              color='primary'
+              value={credentials.password}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            aria-label = 'login'
+            fullWidth
+            variant="contained"
+          >
+            Sign in
+          </Button>
+        </Box>
+      </Card>
+    </SignInContainer>
   );
 }
-
-export default Login;
