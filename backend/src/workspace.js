@@ -13,16 +13,16 @@ import * as db from './db.js';
  * @throws {500} If an internal server error occurs.
  */
 export async function getUserWorkspaces(req, res) {
-  console.log('in get user workspaces'); 
+  console.log('in get user workspaces');
   if (!req.user || !req.user.id) {
-    res.status(403).json({ error: 'Invalid or expired token' });
+    res.status(403).json({error: 'Invalid or expired token'});
     return;
   }
   const userId = req.user.id;
   const workspaces = await db.getWorkspacesByUserId(userId);
   console.log('Workspaces from DB:', workspaces);
   if (!workspaces || workspaces.length === 0) {
-    res.status(404).json({ message: 'No workspaces found' });
+    res.status(404).json({message: 'No workspaces found'});
     return;
   }
   const formattedWorkspaces = workspaces.map( (workspace) => ({
