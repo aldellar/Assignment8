@@ -1,4 +1,33 @@
--- Your data insert statements go here;
 DELETE FROM account;
 
-INSERT INTO account(email, password_hash, gov_name) VALUES ('molly@books.com', crypt('mollymember', gen_salt('md5')), 'Andrew Dellaringa');
+INSERT INTO account (id, data)
+VALUES (
+    'f2ad0728-9d47-4e48-ac63-78a812ab6cab',
+    jsonb_build_object(
+        'email', 'molly@books.com', 
+        'password_hash', crypt('mollymember', gen_salt('md5')),
+        'gov_name', 'Andrew Dellaringa'
+    )
+);
+INSERT INTO workspaces (id, data)
+VALUES (
+    'a3b2c1d4-e5f6-7890-abcd-1234567890ef',
+    jsonb_build_object(
+        'name', 'Project Alpha',
+        'users', jsonb_build_array('f2ad0728-9d47-4e48-ac63-78a812ab6cab')
+    )
+);
+INSERT INTO workspace_users (workspace_id, user_id)
+
+VALUES ('a3b2c1d4-e5f6-7890-abcd-1234567890ef', 'f2ad0728-9d47-4e48-ac63-78a812ab6cab');
+INSERT INTO workspaces (id, data)
+VALUES (
+    'b4c3d2e1-f6a7-8901-bcde-2345678901ff',
+    jsonb_build_object(
+        'name', 'Project Beta',
+        'users', jsonb_build_array('f2ad0728-9d47-4e48-ac63-78a812ab6cab')
+    )
+);
+
+INSERT INTO workspace_users (workspace_id, user_id)
+VALUES ('b4c3d2e1-f6a7-8901-bcde-2345678901ff', 'f2ad0728-9d47-4e48-ac63-78a812ab6cab');

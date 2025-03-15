@@ -83,9 +83,9 @@ export default function Login() {
     const response = await fetch('http://localhost:3010/api/v0/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials)
+      body: JSON.stringify(credentials),
     });
     if (response.ok) {
       const data = await response.json();

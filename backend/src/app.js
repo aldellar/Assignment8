@@ -17,6 +17,7 @@ import path from 'node:path';
 import OpenApiValidator from 'express-openapi-validator';
 import {fileURLToPath} from 'node:url';
 import * as auth from './auth.js';
+import * as workspace from './workspace.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,8 +44,8 @@ app.use(
 
 // Your routes go here; however, do NOT write then inline.
 // Create additional modules and delegate to their exports.
-app.post('/api/v0/login',     auth.login);
-
+app.post('/api/v0/login', auth.login);
+app.get('/api/v0/workspaces', auth.check, workspace.getUserWorkspaces);
 app.use((err, req, res, next) => {
   res.status(err.status).json({
     message: err.message,

@@ -36,7 +36,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
-                
+  /workspaces:
+    get:
+      security:
+      - bearerAuth: []     
+      description: Returns all workspaces
+      responses:
+        401:
+          description: Unauthorised
+        200:
+          description: Returns a list of workspaces the user has access to
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/workspace'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+                  
 components:
   schemas:
     UnexpectedError:
@@ -68,6 +90,24 @@ components:
           type: string
         accessToken:
           type: string
+        id:
+          type: string
+          format: uuid
       required:
         - name
         - accessToken
+        - id
+
+    workspace:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+     
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes

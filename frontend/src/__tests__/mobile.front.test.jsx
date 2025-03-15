@@ -34,5 +34,5 @@ it('Accepts Good Credentials', async () => {
   fireEvent.click(screen.getByLabelText('login'));
   expect(await screen.findByText('Home Page')).toBeInTheDocument();
   expect(await screen.findByText('Logout')).toBeInTheDocument();
-  expect(await screen.findByText('someToken')).toBeInTheDocument();
+  expect(await screen.findByText('Auth Token: someToken')).toBeInTheDocument();
 });
