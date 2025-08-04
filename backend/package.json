@@ -10,19 +10,20 @@
     "@vitest/coverage-v8": "*",
     "eslint": "*",
     "eslint-config-google": "*",
-    "eslint-plugin-jsdoc": "*", 
+    "eslint-plugin-jsdoc": "*",
     "globals": "8",
     "nodemon": "*",
     "strip-comments": "*",
     "supertest": "*",
-    "vitest": "*",
-    "vite-plugin-eslint": "*"
+    "vite-plugin-eslint": "*",
+    "vitest": "*"
   },
   "dependencies": {
     "cors": "*",
     "dotenv": "*",
     "express": "*",
     "express-openapi-validator": "*",
+    "joi": "^18.0.0",
     "js-yaml": "*",
     "jsonwebtoken": "*",
     "pg": "*",

@@ -21,7 +21,7 @@ export async function login(req, res) {
   if (user) {
     const accessToken = jwt.sign(
         {id: user.id, email: user.email},
-        process.env.secret, {
+        process.env.JWT_SECRET, {
           expiresIn: '30m',
           algorithm: 'HS256',
         });
@@ -48,7 +48,7 @@ export async function check(req, res, next) {
   console.log('in check jwt');
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, process.env.secret, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       console.log('Invalid or expired token:', err.message);
       return res.status(403).json({message: 'Invalid token'});

@@ -18,6 +18,7 @@ import OpenApiValidator from 'express-openapi-validator';
 import {fileURLToPath} from 'node:url';
 import * as auth from './auth.js';
 import * as workspace from './workspace.js';
+import Joi from 'joi';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +45,21 @@ app.use(
 
 // Your routes go here; however, do NOT write then inline.
 // Create additional modules and delegate to their exports.
-app.post('/api/v0/login', auth.login);
+
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(1).required(),
+});
+
+
+app.post('/api/v0/login', (req, res) => {
+  const { error } = loginSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  auth.login(req, res);
+});
+
 app.get('/api/v0/workspaces', auth.check, workspace.getUserWorkspaces);
 app.use((err, req, res, next) => {
   res.status(err.status).json({
